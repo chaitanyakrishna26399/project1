@@ -242,7 +242,7 @@ class userModule {
                     if (results.rowCount >= 1) {
                         res.status(200).json({
                             status: true,
-                            data:results.rows[0]
+                            data:results.rows[0],
                             message: `task updated successfully.`
                         })
                     } else {
