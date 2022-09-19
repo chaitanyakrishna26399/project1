@@ -99,6 +99,7 @@ class userModule {
                                     if (results.rowCount >= 1) {
                                         res.status(200).json({
                                             status: true,
+                                            data:results.rows[0],
                                             message: `Register successfully.`
                                         })
                                     } else {
@@ -191,6 +192,7 @@ class userModule {
                         if (results.rowCount >= 1) {
                             res.status(200).json({
                                 status: true,
+                                data:results.rows[0],
                                 message: `task added successfully.`
                             })
                         } else {
@@ -240,6 +242,7 @@ class userModule {
                     if (results.rowCount >= 1) {
                         res.status(200).json({
                             status: true,
+                            data:results.rows[0]
                             message: `task updated successfully.`
                         })
                     } else {
