@@ -26,8 +26,8 @@ class userModule {
                         // generates four digit OTP.
                         var fourDigitOTP = Math.floor(Math.random() * (9999 - 1111) + 1111);
                         console.log(inputData.email, fourDigitOTP)
-                        let mailStatus = await sendgrid.otp(inputData.email, fourDigitOTP)
-                        if (mailStatus) {
+                        //let mailStatus = await sendgrid.otp(inputData.email, fourDigitOTP)
+                        if (true) {
                             // sms sent succesfully.
                             await pool.query(`INSERT INTO user_details (email,otp) VALUES ($1,$2) `, [inputData.email, fourDigitOTP], (error, results) => {
                                 if (error) {
