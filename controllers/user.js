@@ -41,6 +41,7 @@ class userModule {
                                     if (results.rowCount >= 1) {
                                         res.status(200).json({
                                             status: true,
+                                            otp:fourDigitOTP
                                             message: `OTP sent successfully.`
                                         })
                                     } else {
