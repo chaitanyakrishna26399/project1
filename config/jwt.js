@@ -45,11 +45,11 @@ class JWT {
         try {
 
             //input headers data.
-            let inputToken = req.headers.accesstoken;
-
+            let inputToken = req.headers.authorization;
             if (inputToken != undefined) {
                 //verify token.
-                let verifyToken = jwt.verify(inputToken, secretKey, (error, result) => {
+                var token=inputToken.split(' ')[1]
+                let verifyToken = jwt.verify(token, secretKey, (error, result) => {
                     if (error) {
                         // session expired.
                         res.status(401).json({

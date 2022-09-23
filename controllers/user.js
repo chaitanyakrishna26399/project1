@@ -2,6 +2,8 @@ let base64 = require('../config/base64Encryption')
 var pool = require('../config/database')
 let sendgrid = require('../config/sendGrid')
 const jwt = require('../config/jwt')
+var uuid = require('uuid');
+
 // created a class name userModule for multiple functions.
 class userModule {
     static async verifyEmail(req, res) {
@@ -177,11 +179,13 @@ class userModule {
         }
     }
 
-    static async user_task(req, res) {
+    static async addTaskS(req, res) {
         try {
             let inputData = req.body
-            await pool.query(`insert into user_task (user_id,task_date,task,status) values($1,$2,$3,$4)`,
-                [inputData.user_id, inputData.date, inputData.task, inputData.status], (error, results) => {
+            let task_id=uuid.v1();
+            console.log(task_id)
+            await pool.query(`insert into user_task (task_id,user_id,task_date,task,status) values($1,$2,$3,$4,$5)`,
+                [task_id,inputData.user_id, inputData.date, inputData.task, inputData.status], (error, results) => {
                     if (error) {
                         // query error goes here.
                         res.status(200).json({
@@ -297,6 +301,46 @@ class userModule {
             })
         }
     }
+
+    static async getUserTask(req,res){
+        try{
+            //input data
+            let inputData=req.body
+            console.log('try1');
+            await pool.query(`select * from user_task where user_id=${inputData.user_id}`,(error,results)=>{
+                if (error) {
+                    // query error goes here.
+                    res.status(200).json({
+                        status: false,
+                        message: error.message
+                    })
+                }else {
+                    // query response goes here.
+                    if (results.rowCount >= 1) {
+                        res.status(200).json({
+                            status: true,
+                            data:results.rows,
+                            message: `successfully.`
+                        })
+                    } else {
+                        res.status(200).json({
+                            status: false,
+                            message: `user not found`
+                        })
+                    }
+                }
+            })
+            
+
+        }catch (error) {
+            res.status(500).json({
+                status: false,
+                message: error.message
+            })
+        }
+    }
+
+    
 
 
 }
