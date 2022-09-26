@@ -221,9 +221,9 @@ class userModule {
             let inputData = req.body;
             let queryFilter = [];
             let valueFilter = [];
-            if (inputData.date != undefined) {
-                valueFilter.push(inputData.date)
-                queryFilter.push(`date = $${parseInt(valueFilter.indexOf(inputData.date)) + 1}`)
+            if (inputData.task_date != undefined) {
+                valueFilter.push(inputData.task_date)
+                queryFilter.push(`task_date = $${parseInt(valueFilter.indexOf(inputData.task_date)) + 1}`)
             }
 
             if (inputData.task != undefined) {
@@ -233,9 +233,11 @@ class userModule {
                 valueFilter.push(inputData.status)
                 queryFilter.push(`status = $${parseInt(valueFilter.indexOf(inputData.status)) + 1}`)
             }
+            valueFilter.push(inputData.task_id)
+            var num=valueFilter.length
             //query for update
             // console.log(`update user_task set ${queryFilter} where task_id=${inputData.id}`, valueFilter)
-            await pool.query(`update user_task set ${queryFilter} where task_id=${inputData.task_id}`, valueFilter, async (error, results) => {
+            await pool.query(`update user_task set ${queryFilter} where task_id=$${num}`, valueFilter, async (error, results) => {
                 if (error) {
                     // query error goes here.
                     res.status(200).json({
@@ -270,7 +272,7 @@ class userModule {
         try{
             //input data
             let inputData=req.body
-            await pool.query(`delete from user_task where task_id=${inputData.task_id}`,(error,results)=>{
+            await pool.query(`delete from user_task where task_id=$1`,[inputData.task_id],(error,results)=>{
                 if (error) {
                     // query error goes here.
                     res.status(200).json({
