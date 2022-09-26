@@ -96,7 +96,7 @@ class userValidations {
         // validate the input body value. 
         const validation = joi.object({
             user_id: joi.number().integer().required(),
-            date:joi.date().required(),
+            task_date:joi.date().required(),
             task: joi.string().required(),
             status : joi.string().valid('completed','incompleted').required()
         })
