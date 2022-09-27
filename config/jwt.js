@@ -57,8 +57,9 @@ class JWT {
                             message: `Session timed out.`
                         })
                     } else {
+                        req.user_id=result.user_id
                         // successfully verified.
-                        next(); // goes to next method.
+                        next(); // goes to next method
                     }
                 })
             }else{
