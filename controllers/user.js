@@ -148,7 +148,7 @@ class userModule {
                     if (results.rowCount >= 1) {
                         let decodePassword = await base64.base64Decode(results.rows[0].user_password);
                         if (decodePassword === inputData.password) {
-                            let accessToken = await jwt.createToken({ email: inputData.email })
+                            let accessToken = await jwt.createToken({ user_id:JSON.stringify(results.rows[0].user_id) })
                             res.status(200).json({
                                 status: true,
                                 result: accessToken,
@@ -185,7 +185,7 @@ class userModule {
             let task_id=uuid.v1();
             console.log(task_id)
             await pool.query(`insert into user_task (task_id,user_id,task_date,task,status) values($1,$2,$3,$4,$5)`,
-                [task_id,inputData.user_id, inputData.date, inputData.task, inputData.status], (error, results) => {
+                [task_id,JSON.parse(req.user_id), inputData.date, inputData.task, inputData.status], (error, results) => {
                     if (error) {
                         // query error goes here.
                         res.status(200).json({
@@ -237,7 +237,7 @@ class userModule {
             var num=valueFilter.length
             //query for update
             // console.log(`update user_task set ${queryFilter} where task_id=${inputData.id}`, valueFilter)
-            await pool.query(`update user_task set ${queryFilter} where task_id=$${num}`, valueFilter, async (error, results) => {
+            await pool.query(`update user_task set ${queryFilter} where task_id=$${num} and user_id=${JSON.parse(req.user_id)}`, valueFilter, async (error, results) => {
                 if (error) {
                     // query error goes here.
                     res.status(200).json({
@@ -272,7 +272,7 @@ class userModule {
         try{
             //input data
             let inputData=req.body
-            await pool.query(`delete from user_task where task_id=$1`,[inputData.task_id],(error,results)=>{
+            await pool.query(`delete from user_task where task_id=$1 and user_id =${JSON.parse(req.user_id)}`,[inputData.task_id],(error,results)=>{
                 if (error) {
                     // query error goes here.
                     res.status(200).json({
@@ -306,10 +306,7 @@ class userModule {
 
     static async getUserTask(req,res){
         try{
-            //input data
-            let inputData=req.body
-            console.log('try1');
-            await pool.query(`select * from user_task where user_id=${inputData.user_id}`,(error,results)=>{
+            await pool.query(`select * from user_task where user_id=${JSON.parse(req.user_id)}`,(error,results)=>{
                 if (error) {
                     // query error goes here.
                     res.status(200).json({
